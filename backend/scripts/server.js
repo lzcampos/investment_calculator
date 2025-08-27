@@ -200,6 +200,7 @@ app.post('/api/calculate_investment', (req, res) => {
       summary: {
         totalAmount: Number(totalAmount.toFixed(2)),
         totalDividends: Number(totalDividends.toFixed(2)),
+        monthly_investment: monthlyCash,
         profit: Number(profit.toFixed(2)),
         investment: Number(investment.toFixed(2)),
         shares,
