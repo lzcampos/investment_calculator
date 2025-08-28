@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
 import { motion } from 'framer-motion'
@@ -43,10 +43,10 @@ const amountChips = [100, 500, 1000, 5000]
 
 const mapDescription = (op: CalcOp, summary: CalcSummary) => {
   if (op.description === 'initial_investment') {
-    return `Aporte inicial de ${op?.total_investment?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
+    return `Aporte inicial: ${op?.total_investment?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
   }
   if (op.description === 'monthly_investment') {
-    return `Aporte mensal de ${summary.monthly_investment?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
+    return `Aporte mensal: ${summary.monthly_investment?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
   }
   if (op.description === 'dividends_received_and_reinvested') {
     return `Reinvestimento de dividendos: ${op?.dividend_amount?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
@@ -68,6 +68,9 @@ export default function Simulate() {
   const [resp, setResp] = useState<CalcResponse | null>(null)
   const [showAll, setShowAll] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lastPayload, setLastPayload] = useState<any | null>(null)
+  const resumeRef = useRef<HTMLDivElement | null>(null)
+  const [showMobileHint, setShowMobileHint] = useState(false)
 
   // search with debounce
   useEffect(() => {
@@ -87,17 +90,31 @@ export default function Simulate() {
 
   const submit = async () => {
     if (!valid || !selected || !start) return
-    setSubmitting(true); setResp(null); setError(null)
-    try {
-      const payload = {
-        stock_id: selected.id,
-        initial_investment: Number(initial),
-        investment_start: Math.floor(start.getTime() / 1000),
-        monthly_investment: monthlyEnabled ? Number(monthly || 0) : 0,
-        reinvest_dividends: reinvest,
+    setError(null)
+    const payload = {
+      stock_id: selected.id,
+      initial_investment: Number(initial),
+      investment_start: Math.floor(start.getTime() / 1000),
+      monthly_investment: monthlyEnabled ? Number(monthly || 0) : 0,
+      reinvest_dividends: reinvest,
+    }
+    if (lastPayload && JSON.stringify(lastPayload) === JSON.stringify(payload)) {
+      // No changes; reuse current response and just guide the user to the result on mobile
+      if (resp) {
+        const isMobile = window.matchMedia('(max-width: 640px)').matches
+        if (isMobile) {
+          resumeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          setShowMobileHint(true)
+          setTimeout(() => setShowMobileHint(false), 3000)
+        }
       }
+      return
+    }
+    setSubmitting(true); setResp(null)
+    try {
       const r = await axios.post(`/api/calculate_investment`, payload)
       setResp(r.data)
+      setLastPayload(payload)
     } catch (e: any) {
       setError(e?.response?.data?.error || 'Erro ao calcular')
     } finally {
@@ -105,13 +122,27 @@ export default function Simulate() {
     }
   }
 
+  useEffect(() => {
+    if (!resp) return
+    const isMobile = window.matchMedia('(max-width: 640px)').matches
+    if (isMobile) {
+      // Scroll to resume and briefly show a hint to look below
+      setTimeout(() => {
+        resumeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        setShowMobileHint(true)
+        setTimeout(() => setShowMobileHint(false), 3000)
+      }, 100)
+    }
+  }, [resp])
+
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 grid gap-8 lg:grid-cols-2">
       <section>
-        <h2 className="text-2xl font-bold mb-4">Simular meus dividendos</h2>
+        <h1 className="text-3xl font-extrabold mb-2">Calculadora B3</h1>
+        <p className="text-ink/70 mb-6">Simule aportes iniciais e mensais, com reinvestimento de dividendos, para visualizar a evolução do seu patrimônio.</p>
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-1">Ticker</label>
+            <label className="block text-sm font-medium mb-1">Código do ativo</label>
             <div className="relative">
               <input
                 value={selected ? selected.symbol : query}
@@ -137,7 +168,7 @@ export default function Simulate() {
             <label className="block text-sm font-medium mb-1">Aporte inicial</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {amountChips.map(v => (
-                <button key={v} onClick={() => setInitial(v)} className="px-3 py-1 rounded-full border text-sm hover:bg-primary-50">
+                <button key={v} onClick={() => setInitial((cur) => Number(cur || 0) + v)} className="px-3 py-1 rounded-full border text-sm hover:bg-primary-50">
                   {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                 </button>
               ))}
@@ -162,7 +193,7 @@ export default function Simulate() {
             <div className={clsx('flex flex-col gap-2', !monthlyEnabled && 'opacity-50 pointer-events-none') }>
               <div className="flex flex-wrap gap-2">
                 {amountChips.map(v => (
-                  <button key={v} onClick={() => setMonthly(v)} className="px-3 py-1 rounded-full border text-sm hover:bg-primary-50">
+                  <button key={v} onClick={() => setMonthly((cur) => Number(cur || 0) + v)} className="px-3 py-1 rounded-full border text-sm hover:bg-primary-50">
                     {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                   </button>
                 ))}
@@ -191,7 +222,7 @@ export default function Simulate() {
                     selected={start}
                     onSelect={(d) => { setStart(d); setOpenCalendar(false) }}
                     toDate={new Date()}
-                    captionLayout="dropdown-buttons"
+                    captionLayout="dropdown"
                     fromYear={1990}
                     toYear={new Date().getFullYear()}
                     showOutsideDays
@@ -223,7 +254,7 @@ export default function Simulate() {
       <section>
         {resp ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-            <div className="rounded-lg border p-4">
+            <div ref={resumeRef} className="rounded-lg border p-4">
               <h3 className="font-semibold text-lg mb-2">Resumo</h3>
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
                 <div>
@@ -262,18 +293,23 @@ export default function Simulate() {
             </div>
 
             <div className="space-y-3">
+              {showMobileHint && (
+                <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="sm:hidden flex items-center justify-center gap-2 text-sm text-primary-700">
+                  <span>Ver histórico de operações</span>
+                  <ChevronDown size={16} className="animate-bounce" />
+                </motion.div>
+              )}
               <h3 className="font-semibold text-lg">Histórico de operações</h3>
               {(showAll ? resp.detailed_description : resp.detailed_description.slice(0, 5)).map((op, idx) => (
                 <div key={idx} className="rounded-lg border p-3">
                   <div className="text-sm font-semibold mb-1">{mapDescription(op, resp.summary)}</div>
                   <div className="text-xs text-ink/70 flex flex-wrap gap-3">
-                    {op.timestamp && <span>Data: {new Date(op.timestamp * 1000).toLocaleDateString('pt-BR')}</span>}
-                    {typeof op.price_used === 'number' && <span>Preço: {op.price_used.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
-                    {typeof op.shares_bought === 'number' && <span>Compradas: {op.shares_bought}</span>}
+                    {typeof op.timestamp === 'number' && typeof op.price_used === 'number' && <span>Preço em {new Date(op.timestamp * 1000).toLocaleDateString('pt-BR')}: {op.price_used.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
+                    {typeof op.shares_bought === 'number' && <span>Cotas compradas: {op.shares_bought}</span>}
                     {typeof op.total_shares === 'number' && <span>Total de cotas: {op.total_shares}</span>}
                     {typeof op.available_total === 'number' && <span>Saldo: {op.available_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
                     {typeof op.total_investment === 'number' && <span>Aportes: {op.total_investment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
-                    {typeof op.total_investment === 'number' && typeof op.total_shares === 'number' && typeof op.price_used === 'number' && <span>Total: {(op.total_shares * op.price_used).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
+                    {typeof op.total_investment === 'number' && typeof op.total_shares === 'number' && typeof op.price_used === 'number' && <span>Total da posição: {(op.total_shares * op.price_used).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
                     {typeof op.dividend_amount === 'number' && <span>Dividendos: {op.dividend_amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
                   </div>
                 </div>

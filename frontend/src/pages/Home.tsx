@@ -37,7 +37,7 @@ export default function Home() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink">
-            Aportei
+            Calculadora B3
           </h1>
           <div className="mt-6 h-20 sm:h-16">
             <AnimatePresence mode="wait">
@@ -69,7 +69,7 @@ export default function Home() {
           </div>
           <div className="mt-10">
             <button
-              onClick={() => navigate('/simulate')}
+              onClick={() => navigate('/simular')}
               className="inline-flex items-center justify-center rounded-md bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 text-base font-medium shadow transition"
             >
               {ctaPhrases[ctaIdx]}
