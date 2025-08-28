@@ -2,7 +2,7 @@
 @reference "tailwindcss";
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 @theme {
@@ -17,7 +17,7 @@
   --color-primary-700: #0f766e;
   --color-primary-800: #115e59;
   --color-primary-900: #134e4a;
-  --color-ink: #0f172a;
+  --color-ink: #f8fafc;
   /* Complementary accents */
   --color-accent-50: #fff1f2;
   --color-accent-400: #fb7185; /* soft rose for highlights/negatives */
@@ -25,17 +25,17 @@
   --color-info-50: #eff6ff;
   --color-info-400: #60a5fa; /* blue for informational emphasis */
 
-  /* Warm amber palette for highlights (chips, inputs) */
-  --color-warm-50: #fffbeb;
-  --color-warm-100: #fef3c7;
-  --color-warm-200: #fde68a;
-  --color-warm-300: #fcd34d;
-  --color-warm-400: #fbbf24;
-  --color-warm-500: #f59e0b;
-  --color-warm-600: #d97706;
-  --color-warm-700: #b45309;
-  --color-warm-800: #92400e;
-  --color-warm-900: #78350f;
+  /* Neutral grayscale palette for dark mode UI */
+  --color-warm-50: #18181b;   /* containers */
+  --color-warm-100: #27272a;  /* inputs */
+  --color-warm-200: #3f3f46;  /* borders */
+  --color-warm-300: #52525b;  /* strong borders */
+  --color-warm-400: #71717a;  /* subdued text */
+  --color-warm-500: #a1a1aa;  /* icons */
+  --color-warm-600: #d4d4d8;  /* controls accent */
+  --color-warm-700: #e4e4e7;  /* hover */
+  --color-warm-800: #fafafa;  /* strong text */
+  --color-warm-900: #ffffff;  /* white */
 }
 
 html, body, #root {
@@ -43,11 +43,11 @@ html, body, #root {
 }
 
 html {
-  @apply bg-gradient-to-b from-primary-100 to-white;
+  @apply bg-gradient-to-b from-black to-zinc-900;
 }
 
 body {
   font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
-  @apply text-ink antialiased;
+  @apply text-ink antialiased text-zinc-100;
   background-color: transparent;
 }

@@ -245,14 +245,14 @@ export default function Simulate() {
             <label htmlFor="reinvest" className="text-sm">Reinvestir dividendos</label>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex justify-center">
             <button
               onClick={submit}
               disabled={!valid || submitting}
-              className={clsx('inline-flex items-center justify-center rounded-md px-6 py-3 text-white font-medium shadow transition',
-                valid && !submitting ? 'bg-warm-600 hover:bg-warm-700' : 'bg-gray-300 cursor-not-allowed')}
+              className={clsx('inline-flex items-center justify-center rounded-md px-6 py-3 text-white font-medium shadow transition border-2',
+                valid && !submitting ? 'bg-warm-500 hover:bg-warm-400 border-warm-700' : 'bg-gray-500 cursor-not-allowed border-gray-400')}
             >
-              {submitting ? 'Calculando...' : 'Calcular'}
+              <span className="text-white">{submitting ? 'Calculando...' : 'Calcular'}</span>
             </button>
             {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
           </div>
@@ -262,7 +262,7 @@ export default function Simulate() {
       <section>
         {resp ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-            <div ref={resumeRef} className="rounded-lg border p-4 bg-warm-50 shadow-sm border-warm-200">
+            <div ref={resumeRef} className="rounded-lg border-2 p-4 bg-warm-50 shadow border-warm-300">
               <h3 className="font-semibold text-lg mb-2">Resumo</h3>
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
                 <div>
