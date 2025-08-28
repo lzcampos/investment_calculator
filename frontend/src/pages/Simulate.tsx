@@ -71,6 +71,8 @@ export default function Simulate() {
   const [lastPayload, setLastPayload] = useState<any | null>(null)
   const resumeRef = useRef<HTMLDivElement | null>(null)
   const [showMobileHint, setShowMobileHint] = useState(false)
+  const fullTitle = 'Calculadora B3'
+  const [animatedTitle, setAnimatedTitle] = useState('')
 
   // search with debounce
   useEffect(() => {
@@ -135,10 +137,32 @@ export default function Simulate() {
     }
   }, [resp])
 
+  useEffect(() => {
+    const run = () => {
+      setAnimatedTitle('')
+      let i = 0
+      const stepTimer = setInterval(() => {
+        i += 1
+        setAnimatedTitle(fullTitle.slice(0, i))
+        if (i >= fullTitle.length) {
+          clearInterval(stepTimer)
+        }
+      }, 80)
+    }
+    run()
+    const restartTimer = setInterval(run, 5000)
+    return () => { clearInterval(restartTimer) }
+  }, [])
+
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 grid gap-8 lg:grid-cols-2">
       <section>
-        <h1 className="text-3xl font-extrabold mb-2">Calculadora B3</h1>
+        <h1 className="text-3xl font-extrabold mb-2 relative inline-block">
+          <span className="invisible select-none">{fullTitle}</span>
+          <span className="absolute inset-0 gradient-title select-none">
+            {animatedTitle}
+          </span>
+        </h1>
         <p className="text-ink/70 mb-6">Simule investimentos em ativos com aportes iniciais e mensais e reinvestimento de dividendos, para visualizar a evolução do patrimônio.</p>
         <div className="space-y-6">
           <div>
@@ -250,7 +274,7 @@ export default function Simulate() {
               onClick={submit}
               disabled={!valid || submitting}
               className={clsx('inline-flex items-center justify-center rounded-md px-6 py-3 text-white font-medium shadow transition border-2',
-                valid && !submitting ? 'bg-warm-500 hover:bg-warm-400 border-warm-700' : 'bg-gray-500 cursor-not-allowed border-gray-400')}
+                valid && !submitting ? 'bg-zinc-800 hover:bg-zinc-700 border-zinc-500' : 'bg-zinc-600 cursor-not-allowed border-zinc-500/70')}
             >
               <span className="text-white">{submitting ? 'Calculando...' : 'Calcular'}</span>
             </button>
@@ -260,7 +284,7 @@ export default function Simulate() {
       </section>
 
       <section>
-        {resp ? (
+        {resp && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
             <div ref={resumeRef} className="rounded-lg border-2 p-4 bg-warm-50 shadow border-warm-300">
               <h3 className="font-semibold text-lg mb-2">Resumo</h3>
@@ -329,8 +353,6 @@ export default function Simulate() {
               )}
             </div>
           </motion.div>
-        ) : (
-          <div className="text-ink/70 bg-white/70 border rounded-md p-4">Preencha o formulário e clique em calcular para ver o resultado.</div>
         )}
       </section>
     </div>
