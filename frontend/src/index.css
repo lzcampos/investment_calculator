@@ -61,3 +61,52 @@ body {
   -webkit-text-fill-color: transparent !important;
   display: inline-block;
 }
+
+/* Dark mode overrides for react-day-picker */
+.rdp {
+  --rdp-accent-color: #a1a1aa;
+  --rdp-background-color: #27272a;
+  --rdp-accent-color-dark: #d4d4d8;
+  --rdp-accent-color-light: #3f3f46;
+  color: #e5e7eb;
+}
+.rdp-months {
+  background-color: #18181b;
+  border-radius: 0.5rem;
+}
+.rdp-day {
+  color: #e5e7eb;
+}
+.rdp-day:hover {
+  background-color: #3f3f46;
+}
+.rdp-day_selected,
+.rdp-day_selected:focus-visible,
+.rdp-day_selected:hover {
+  background-color: #71717a;
+  color: #111827;
+}
+.rdp-caption_label,
+.rdp-head_cell {
+  color: #d4d4d8;
+}
+
+/* Ensure daypicker buttons (nav, days) are white, not blue */
+.rdp .rdp-button,
+.rdp .rdp-nav_button {
+  color: #ffffff;
+  background: transparent;
+}
+.rdp .rdp-button:hover,
+.rdp .rdp-nav_button:hover {
+  background-color: #3f3f46;
+}
+.rdp .rdp-button:focus-visible {
+  outline: 2px solid #52525b;
+  outline-offset: 2px;
+}
+.rdp .rdp-caption_dropdowns select {
+  background-color: #27272a;
+  color: #ffffff;
+  border: 1px solid #3f3f46;
+}

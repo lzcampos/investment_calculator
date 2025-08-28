@@ -176,11 +176,11 @@ export default function Simulate() {
               />
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40" size={18} />
               {(!selected && results.length > 0) && (
-                <div className="absolute z-10 mt-1 w-full rounded-md border bg-white shadow">
+                <div className="absolute z-10 mt-1 w-full rounded-md border-2 border-warm-300 bg-warm-50 shadow-lg overflow-hidden">
                   {results.map((r) => (
-                    <button key={r.id} onClick={() => { setSelected(r); setQuery('') }} className="w-full text-left px-3 py-2 hover:bg-primary-50/70">
-                      <div className="font-medium">{r.symbol}</div>
-                      <div className="text-xs text-ink/60 line-clamp-1">{r.longName || r.shortName}</div>
+                    <button key={r.id} onClick={() => { setSelected(r); setQuery('') }} className="w-full text-left px-3 py-2 hover:bg-warm-100">
+                      <div className="font-medium text-warm-900">{r.symbol}</div>
+                      <div className="text-xs text-warm-500 line-clamp-1">{r.longName || r.shortName}</div>
                     </button>
                   ))}
                 </div>
@@ -248,7 +248,7 @@ export default function Simulate() {
                 <CalendarIcon size={18} />
               </button>
               {openCalendar && (
-                <div className="absolute z-10 mt-2 bg-white border rounded-md p-2 shadow">
+                <div className="absolute z-10 mt-2 bg-warm-50 border-2 border-warm-300 rounded-md p-2 shadow-lg text-zinc-100">
                   <DayPicker
                     mode="single"
                     selected={start}
