@@ -6,6 +6,13 @@ Investment simulator that uses historical B3 data. The project is split into two
 - backend (Node + Express + SQLite): ingests tickers, prices and dividends (via Yahoo Finance) and exposes the calculation API.
 - frontend (React + Vite + Tailwind): UI to search tickers, configure contributions and view the summary and the operations history.
 
+Demo
+----
+
+Quick video demo of the app in action:
+
+<video src="docs/demo.mp4" controls width="720"></video>
+
 Requirements
 ------------
 
