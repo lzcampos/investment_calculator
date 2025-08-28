@@ -105,7 +105,7 @@ export default function Simulate() {
         if (isMobile) {
           resumeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
           setShowMobileHint(true)
-          setTimeout(() => setShowMobileHint(false), 3000)
+          //setTimeout(() => setShowMobileHint(false), 3000)
         }
       }
       return
@@ -139,7 +139,7 @@ export default function Simulate() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 grid gap-8 lg:grid-cols-2">
       <section>
         <h1 className="text-3xl font-extrabold mb-2">Calculadora B3</h1>
-        <p className="text-ink/70 mb-6">Simule aportes iniciais e mensais, com reinvestimento de dividendos, para visualizar a evolução do seu patrimônio.</p>
+        <p className="text-ink/70 mb-6">Simule investimentos em ativos com aportes iniciais e mensais e reinvestimento de dividendos, para visualizar a evolução do patrimônio.</p>
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-1">Código do ativo</label>
@@ -148,13 +148,13 @@ export default function Simulate() {
                 value={selected ? selected.symbol : query}
                 onChange={(e) => { setSelected(null); setQuery(e.target.value) }}
                 placeholder="Ex: PETR4"
-                className="w-full rounded-md border px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-warm-500 bg-warm-50 shadow-sm border-warm-200"
               />
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40" size={18} />
               {(!selected && results.length > 0) && (
                 <div className="absolute z-10 mt-1 w-full rounded-md border bg-white shadow">
                   {results.map((r) => (
-                    <button key={r.id} onClick={() => { setSelected(r); setQuery('') }} className="w-full text-left px-3 py-2 hover:bg-primary-50">
+                    <button key={r.id} onClick={() => { setSelected(r); setQuery('') }} className="w-full text-left px-3 py-2 hover:bg-primary-50/70">
                       <div className="font-medium">{r.symbol}</div>
                       <div className="text-xs text-ink/60 line-clamp-1">{r.longName || r.shortName}</div>
                     </button>
@@ -168,8 +168,12 @@ export default function Simulate() {
             <label className="block text-sm font-medium mb-1">Aporte inicial</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {amountChips.map(v => (
-                <button key={v} onClick={() => setInitial((cur) => Number(cur || 0) + v)} className="px-3 py-1 rounded-full border text-sm hover:bg-primary-50">
-                  {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                <button
+                  key={v}
+                  onClick={() => setInitial((cur) => Number(cur || 0) + v)}
+                  className="px-3 py-1 rounded-full border text-sm bg-warm-50 hover:bg-warm-100 text-ink border-warm-300 shadow-sm"
+                >
+                  +{v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                 </button>
               ))}
             </div>
@@ -178,7 +182,7 @@ export default function Simulate() {
               onChange={(e) => setInitial(e.target.value === '' ? '' : Number(e.target.value))}
               type="number"
               min={0}
-              className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-warm-500 bg-warm-50 shadow-sm border-warm-200"
             />
           </div>
 
@@ -186,15 +190,19 @@ export default function Simulate() {
             <div className="flex items-center justify-between mb-1">
               <label className="block text-sm font-medium">Aporte mensal</label>
               <label className="inline-flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={monthlyEnabled} onChange={(e) => setMonthlyEnabled(e.target.checked)} />
+                <input className="accent-warm-600" type="checkbox" checked={monthlyEnabled} onChange={(e) => setMonthlyEnabled(e.target.checked)} />
                 Habilitar
               </label>
             </div>
             <div className={clsx('flex flex-col gap-2', !monthlyEnabled && 'opacity-50 pointer-events-none') }>
               <div className="flex flex-wrap gap-2">
                 {amountChips.map(v => (
-                  <button key={v} onClick={() => setMonthly((cur) => Number(cur || 0) + v)} className="px-3 py-1 rounded-full border text-sm hover:bg-primary-50">
-                    {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  <button
+                    key={v}
+                    onClick={() => setMonthly((cur) => Number(cur || 0) + v)}
+                    className="px-3 py-1 rounded-full border text-sm bg-warm-50 hover:bg-warm-100 text-ink border-warm-300 shadow-sm"
+                  >
+                    +{v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                   </button>
                 ))}
               </div>
@@ -203,7 +211,7 @@ export default function Simulate() {
                 onChange={(e) => setMonthly(e.target.value === '' ? '' : Number(e.target.value))}
                 type="number"
                 min={0}
-                className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-warm-500 bg-warm-50 shadow-sm border-warm-200"
               />
             </div>
           </div>
@@ -211,7 +219,7 @@ export default function Simulate() {
           <div>
             <label className="block text-sm font-medium mb-1">Início do investimento</label>
             <div className="relative">
-              <button type="button" onClick={() => setOpenCalendar(v => !v)} className="w-full rounded-md border px-3 py-2 flex items-center justify-between">
+              <button type="button" onClick={() => setOpenCalendar(v => !v)} className="w-full rounded-md border px-3 py-2 flex items-center justify-between bg-warm-50 shadow-sm border-warm-200 focus:outline-none focus:ring-2 focus:ring-warm-500">
                 <span>{start ? start.toLocaleDateString('pt-BR') : 'Selecionar data'}</span>
                 <CalendarIcon size={18} />
               </button>
@@ -233,7 +241,7 @@ export default function Simulate() {
           </div>
 
           <div className="flex items-center gap-2">
-            <input id="reinvest" type="checkbox" checked={reinvest} onChange={(e) => setReinvest(e.target.checked)} />
+            <input className="accent-warm-600" id="reinvest" type="checkbox" checked={reinvest} onChange={(e) => setReinvest(e.target.checked)} />
             <label htmlFor="reinvest" className="text-sm">Reinvestir dividendos</label>
           </div>
 
@@ -242,7 +250,7 @@ export default function Simulate() {
               onClick={submit}
               disabled={!valid || submitting}
               className={clsx('inline-flex items-center justify-center rounded-md px-6 py-3 text-white font-medium shadow transition',
-                valid && !submitting ? 'bg-primary-600 hover:bg-primary-700' : 'bg-gray-300 cursor-not-allowed')}
+                valid && !submitting ? 'bg-warm-600 hover:bg-warm-700' : 'bg-gray-300 cursor-not-allowed')}
             >
               {submitting ? 'Calculando...' : 'Calcular'}
             </button>
@@ -254,7 +262,7 @@ export default function Simulate() {
       <section>
         {resp ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-            <div ref={resumeRef} className="rounded-lg border p-4">
+            <div ref={resumeRef} className="rounded-lg border p-4 bg-warm-50 shadow-sm border-warm-200">
               <h3 className="font-semibold text-lg mb-2">Resumo</h3>
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
                 <div>
@@ -266,20 +274,20 @@ export default function Simulate() {
                   <div className="font-medium">{resp.summary.stock.firstTradeDate ? new Date(resp.summary.stock.firstTradeDate * 1000).toLocaleDateString('pt-BR') : '-'}</div>
                 </div>
                 <div>
-                  <div className="text-ink/60">Total</div>
-                  <div className="font-medium">{resp.summary.totalAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                  <div className="text-ink/60">Total da posição</div>
+                  <div className="font-extrabold text-ink">{resp.summary.totalAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
                 </div>
                 <div>
-                  <div className="text-ink/60">Dividendos</div>
-                  <div className="font-medium">{resp.summary.totalDividends.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                  <div className="text-ink/60">Dividendos recebidos</div>
+                  <div className="font-semibold text-emerald-700">{resp.summary.totalDividends.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
                 </div>
                 <div>
                   <div className="text-ink/60">Aportes</div>
-                  <div className="font-medium">{resp.summary.investment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                  <div className="font-semibold">{resp.summary.investment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
                 </div>
                 <div>
                   <div className="text-ink/60">Lucro/Prejuízo</div>
-                  <div className="font-medium">{resp.summary.profit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                  <div className={clsx('font-semibold', resp.summary.profit >= 0 ? 'text-emerald-700' : 'text-accent-600')}>{resp.summary.profit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
                 </div>
                 <div>
                   <div className="text-ink/60">Cotas</div>
@@ -294,14 +302,14 @@ export default function Simulate() {
 
             <div className="space-y-3">
               {showMobileHint && (
-                <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="sm:hidden flex items-center justify-center gap-2 text-sm text-primary-700">
+                <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="sm:hidden flex items-center justify-center gap-2 text-sm text-warm-700">
                   <span>Ver histórico de operações</span>
                   <ChevronDown size={16} className="animate-bounce" />
                 </motion.div>
               )}
-              <h3 className="font-semibold text-lg">Histórico de operações</h3>
+              <h3 className="font-semibold text-xl text-center sm:text-left">Histórico de operações</h3>
               {(showAll ? resp.detailed_description : resp.detailed_description.slice(0, 5)).map((op, idx) => (
-                <div key={idx} className="rounded-lg border p-3">
+                <div key={idx} className="rounded-lg border p-3 bg-warm-50 border-warm-200 shadow-sm">
                   <div className="text-sm font-semibold mb-1">{mapDescription(op, resp.summary)}</div>
                   <div className="text-xs text-ink/70 flex flex-wrap gap-3">
                     {typeof op.timestamp === 'number' && typeof op.price_used === 'number' && <span>Preço em {new Date(op.timestamp * 1000).toLocaleDateString('pt-BR')}: {op.price_used.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
@@ -309,7 +317,7 @@ export default function Simulate() {
                     {typeof op.total_shares === 'number' && <span>Total de cotas: {op.total_shares}</span>}
                     {typeof op.available_total === 'number' && <span>Saldo: {op.available_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
                     {typeof op.total_investment === 'number' && <span>Aportes: {op.total_investment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
-                    {typeof op.total_investment === 'number' && typeof op.total_shares === 'number' && typeof op.price_used === 'number' && <span>Total da posição: {(op.total_shares * op.price_used).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
+                    {typeof op.total_investment === 'number' && typeof op.total_shares === 'number' && typeof op.price_used === 'number' && <span className="font-semibold">Total da posição: {(op.total_shares * op.price_used).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
                     {typeof op.dividend_amount === 'number' && <span>Dividendos: {op.dividend_amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>}
                   </div>
                 </div>
@@ -322,7 +330,7 @@ export default function Simulate() {
             </div>
           </motion.div>
         ) : (
-          <div className="text-ink/60">Preencha o formulário e clique em calcular para ver o resultado.</div>
+          <div className="text-ink/70 bg-white/70 border rounded-md p-4">Preencha o formulário e clique em calcular para ver o resultado.</div>
         )}
       </section>
     </div>

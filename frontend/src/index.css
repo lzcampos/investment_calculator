@@ -18,13 +18,36 @@
   --color-primary-800: #115e59;
   --color-primary-900: #134e4a;
   --color-ink: #0f172a;
+  /* Complementary accents */
+  --color-accent-50: #fff1f2;
+  --color-accent-400: #fb7185; /* soft rose for highlights/negatives */
+  --color-accent-600: #e11d48;
+  --color-info-50: #eff6ff;
+  --color-info-400: #60a5fa; /* blue for informational emphasis */
+
+  /* Warm amber palette for highlights (chips, inputs) */
+  --color-warm-50: #fffbeb;
+  --color-warm-100: #fef3c7;
+  --color-warm-200: #fde68a;
+  --color-warm-300: #fcd34d;
+  --color-warm-400: #fbbf24;
+  --color-warm-500: #f59e0b;
+  --color-warm-600: #d97706;
+  --color-warm-700: #b45309;
+  --color-warm-800: #92400e;
+  --color-warm-900: #78350f;
 }
 
 html, body, #root {
-  height: 100%;
+  min-height: 100%;
+}
+
+html {
+  @apply bg-gradient-to-b from-primary-100 to-white;
 }
 
 body {
   font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
-  @apply bg-white text-ink antialiased;
+  @apply text-ink antialiased;
+  background-color: transparent;
 }
