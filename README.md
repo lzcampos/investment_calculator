@@ -11,7 +11,9 @@ Demo
 
 Quick video demo of the app in action:
 
-<video src="docs/demo.mp4" controls width="720"></video>
+
+https://github.com/user-attachments/assets/bcaffbf8-5731-49c4-ae51-c20baece0ecd
+
 
 Requirements
 ------------
