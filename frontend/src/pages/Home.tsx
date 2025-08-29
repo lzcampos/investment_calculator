@@ -13,33 +13,28 @@ const subcopyPhrases = [
   'Todos os proventos e preços históricos em um só lugar. Da B3 direto para sua tela.',
 ]
 
-const ctaPhrases = [
-  'Comece agora',
-  'Simular meus dividendos',
-  'Explorar dados da bolsa',
-]
+// Removed rotating CTA phrases to avoid mobile layout shifts
 
 export default function Home() {
   const navigate = useNavigate()
   const [heroIdx, setHeroIdx] = useState(0)
   const [subIdx, setSubIdx] = useState(0)
-  const [ctaIdx, setCtaIdx] = useState(0)
+  // No CTA rotation to keep the layout stable on mobile
 
   useEffect(() => {
     const i1 = setInterval(() => setHeroIdx((i) => (i + 1) % heroPhrases.length), 3500)
     const i2 = setInterval(() => setSubIdx((i) => (i + 1) % subcopyPhrases.length), 5000)
-    const i3 = setInterval(() => setCtaIdx((i) => (i + 1) % ctaPhrases.length), 2500)
-    return () => { clearInterval(i1); clearInterval(i2); clearInterval(i3) }
+    return () => { clearInterval(i1); clearInterval(i2) }
   }, [])
 
   return (
     <div className="relative overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
         <div className="text-center">
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-ink">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight gradient-title">
             Calculadora B3
           </h1>
-          <div className="mt-6 h-20 sm:h-16">
+          <div className="mt-6 h-20 sm:h-16 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.p
                 key={heroIdx}
@@ -53,7 +48,7 @@ export default function Home() {
               </motion.p>
             </AnimatePresence>
           </div>
-          <div className="mt-6 min-h-16">
+          <div className="mt-6 h-20 sm:h-28">
             <AnimatePresence mode="wait">
               <motion.p
                 key={subIdx}
@@ -67,12 +62,12 @@ export default function Home() {
               </motion.p>
             </AnimatePresence>
           </div>
-          <div className="mt-10">
+          <div className="mt-10 sm:mt-16">
             <button
               onClick={() => navigate('/simular')}
-              className="inline-flex items-center justify-center rounded-md bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 text-base font-medium shadow transition"
+              className="inline-flex items-center justify-center rounded-md bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 text-base font-medium shadow transition min-w-[180px]"
             >
-              {ctaPhrases[ctaIdx]}
+              Comece agora
             </button>
           </div>
         </div>

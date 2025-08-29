@@ -273,8 +273,8 @@ export default function Simulate() {
             <button
               onClick={submit}
               disabled={!valid || submitting}
-              className={clsx('inline-flex items-center justify-center rounded-md px-6 py-3 text-white font-medium shadow transition border-2',
-                valid && !submitting ? 'bg-zinc-800 hover:bg-zinc-700 border-zinc-500' : 'bg-zinc-600 cursor-not-allowed border-zinc-500/70')}
+              className={clsx('inline-flex items-center justify-center rounded-md bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 text-base font-medium shadow transition',
+                !valid || submitting ? 'opacity-90 cursor-not-allowed hover:bg-primary-600' : '')}
             >
               <span className="text-white">{submitting ? 'Calculando...' : 'Calcular'}</span>
             </button>

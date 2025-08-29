@@ -6,13 +6,12 @@ import Simulate from './pages/Simulate'
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-full flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <main className="flex-1">{children}</main>
-      <footer className="border-t px-4 sm:px-6 py-6 text-sm flex items-center justify-between text-ink/70">
-        <span className="font-semibold">Calculadora B3</span>
-        <a href="https://github.com/lzcampos" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-ink">
+      <footer className="border-t px-3 sm:px-6 py-2 sm:py-3 text-sm sm:text-base flex items-center justify-center text-ink/70">
+        <a href="https://github.com/lzcampos" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 sm:gap-3 hover:text-ink">
           <Github size={18} />
-          <span>github.com/lzcampos</span>
+          <span className="font-medium">github.com/lzcampos</span>
         </a>
       </footer>
     </div>
